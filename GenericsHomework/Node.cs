@@ -3,31 +3,67 @@
     public class Node<T>
     {
         public T Data { get; set; }
-        public Node<T> Next {
-            get;
-            
-            //Idk if this actually works or not
-            private set
-            {
-                if (value is not null)
-                {
-                    Next = value;
-                }
-                else
-                {
-                    Next = this;
-                }
-            } }
+        private Node<T> _next;
+        public Node<T> Next
+        {
+            get => _next;
+            private set => _next = value ?? this;
+        }
 
         public Node(T data)
         {
             Data = data;
-            Next = null;
+            _next = this;
         }
 
+        public void Append(T value)
+        {
+            Node<T> nextNode = new(value)
+            {
+                Next = this.Next
+            };
+            Next = nextNode;
+        }
+
+        public void Clear()
+        {
+            Next = this;
+        }
+        public void ItterativeClear()
+        {
+            Node<T> cur = this;
+            Node<T>? prev = null;
+            while (cur.Next != this)
+            {
+                cur = cur.Next;
+                prev = cur;
+                prev.Next = prev;
+            }
+        }
+
+        public bool Exists(T value)
+        {
+            Node<T> cur = this;
+            do
+            {
+                if (Equals(cur.Data, value))
+                {
+                    return true;
+                }
+                cur = cur.Next;
+            } while (cur.Next != this);
+            return false;
+        }
         public override string ToString()
         {
-            return Data.ToString() ?? "null";
+            if (Data is null)
+            {
+                return "null";
+            }
+            else
+            {
+                return Data.ToString() ?? "null";
+            }
         }
     }
 }
