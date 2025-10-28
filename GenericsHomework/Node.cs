@@ -18,6 +18,10 @@
 
         public void Append(T value)
         {
+            if (this.Exists(value))
+            {
+                throw new InvalidOperationException("Cannot Have Duplicates Appended");
+            }
             Node<T> nextNode = new(value)
             {
                 Next = this.Next
@@ -29,16 +33,16 @@
         {
             Next = this;
         }
-        public void ItterativeClear()
+        public void IterativeClear()
         {
-            Node<T> cur = this;
-            Node<T>? prev = null;
-            while (cur.Next != this)
+            Node<T> cur = this.Next;
+            while (cur != this)
             {
-                cur = cur.Next;
-                prev = cur;
-                prev.Next = prev;
+                Node<T> next = cur.Next;
+                cur.Next = cur;
+                cur = next;
             }
+            this.Next = this;
         }
 
         public bool Exists(T value)
