@@ -2,220 +2,219 @@
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
-namespace GenericsHomeworkTests
+namespace GenericsHomeworkTests;
+
+public class UnitTest1
 {
-    public class UnitTest1
+    public record class TestClass(string Name, int Id);
+
+    [Fact]
+    public void Name_SingleNodeLinkedList_NextIsSetToSelf()
     {
-        public record class TestClass(string Name, int Id);
+        //Arrange
+        int input = 0;
+        Node<int> node = new(input);
 
-        [Fact]
-        public void Name_SingleNodeLinkedList_NextIsSetToSelf()
+        //Act
+        Node<int> next = node.Next;
+
+        //Assert
+        Assert.Equal<Node<int>>(node, next);
+    }
+    [Fact]
+    public void Node_InputIsTestClass_NodeIsAbleToStoreData()
+    {
+        //Arrange
+        TestClass testClass = new("GaryTheSentientTestClass", 1234);
+
+        //Act
+        Node<TestClass> node = new(testClass);
+
+        //Assert
+        Assert.Equal<TestClass>(testClass, node.Data);
+    }
+    [Fact]
+    public void Append_InputInt_FirstNodeNextIsSecondNode ()
+    {
+        //Arrange
+        int nodeTwoData = 1;
+        Node<int> node = new(0);
+
+        //Act
+        node.Append(nodeTwoData);
+
+        //Assert
+        Assert.Equal<int>(1, node.Next.Data);
+    }
+    [Fact]
+    public void Append_InputTestClass_FirstNodeNextIsSecondNode()
+    {
+        //Arrange
+        TestClass secondNodeData = new("AmI?WhatIsThis...Life?", 1222);
+        Node<TestClass> node = new(new TestClass("IamADifferent(nonSentient)TestClass", 1233));
+
+        //Act
+        node.Append(secondNodeData);
+
+        //Assert
+        Assert.Equal<TestClass>(secondNodeData, node.Next.Data);
+    }
+    [Fact]
+    public void Append_InputInt_LastNodeCirclesToFront()
+    {
+        //Arrange
+        int nodeOneData = 0;
+        Node<int> node = new(nodeOneData);
+
+        //Act
+        node.Append(1);
+
+        //Assert
+        Assert.Equal<int>(0, node.Next.Next.Data);
+    }
+    [Fact]
+    public void Append_InputTestClass_LastNodeCirclesToFront()
+    {
+        //Arrange
+        TestClass firstNodeData = new("AlrightGuysThisIsGettingWeird", 1222);
+        Node<TestClass> node = new(firstNodeData);
+
+        //Act
+        node.Append(new TestClass("IamADifferent(nonSentient)TestClass", 1233));
+
+        //Assert
+        Assert.Equal<TestClass>(firstNodeData, node.Next.Next.Data);
+    }
+    [Fact]
+    public void Append_AppendingMultiple_EachNodesNextIsCorrect()
+    {
+        //Arrange
+        //These Are not directly Used but they are here to demonstrate
+        //The data added in the for loop
+        int nodeOneData = 0;
+        int oneNextData = 1;
+        int twoNextData = 2;
+        int threeNextData = 3;
+        int fourNextData = nodeOneData;
+        Node<int> node = new(nodeOneData);
+
+        //Act
+        Node<int> cur = node;
+        for (int i = 1; i < 4; i++)
         {
-            //Arrange
-            int input = 0;
-            Node<int> node = new(input);
-
-            //Act
-            Node<int> next = node.Next;
-
-            //Assert
-            Assert.Equal<Node<int>>(node, next);
+            cur.Append(i);
+            cur = cur.Next;
         }
-        [Fact]
-        public void Node_InputIsTestClass_NodeIsAbleToStoreData()
-        {
-            //Arrange
-            TestClass testClass = new("GaryTheSentientTestClass", 1234);
+        Node<int> node2 = node.Next;
+        Node<int> node3 = node2.Next;
+        Node<int> node4 = node3.Next;
 
-            //Act
-            Node<TestClass> node = new(testClass);
+        //Assert
+        Assert.Equal<int>(oneNextData, node.Next.Data);
+        Assert.Equal<int>(twoNextData, node2.Next.Data);
+        Assert.Equal<int>(threeNextData, node3.Next.Data);
+        Assert.Equal<int>(fourNextData, node4.Next.Data);
+    }
+    [Fact]
+    public void Exists_WithObjectInLL_ReturnsTrue()
+    {
+        //Arrange
+        TestClass testClassToFind = new("ItIsSuchAStrangeThingToBeAnythingAtAll", 1);
+        Node<TestClass> head = new(new TestClass("IamADifferentClass", 2));
+        head.Append(new TestClass("AnotherDifferentClass", 3));
+        head.Next.Append(testClassToFind);
+        head.Next.Next.Append(new TestClass("YetAnotherDifferentClass", 4));
 
-            //Assert
-            Assert.Equal<TestClass>(testClass, node.Data);
-        }
-        [Fact]
-        public void Append_InputInt_FirstNodeNextIsSecondNode ()
-        {
-            //Arrange
-            int nodeTwoData = 1;
-            Node<int> node = new(0);
+        //Act
+        bool isInLinkedL = head.Exists(testClassToFind);
 
-            //Act
-            node.Append(nodeTwoData);
+        //Assert
+        Assert.True(isInLinkedL);
+    }
+    [Fact]
+    public void Exists_WithoutObjectInLL_ReturnsFalse()
+    {
+        //Arrange
+        TestClass testClassToFind = new("IDontKnowWhatIsHappeningAnymore...MaybeATestClassShouldNotHaveSentience", 1);
+        Node<TestClass> head = new(new TestClass("IamADifferentClass", 2));
+        head.Append(new TestClass("AnotherDifferentClass", 3));
+        head.Next.Append(new TestClass("Ronald", 4));
+        head.Next.Next.Append(new TestClass("YetAnotherDifferentClass", 5));
+        //Act
+        bool isInLinkedL = head.Exists(testClassToFind);
 
-            //Assert
-            Assert.Equal<int>(1, node.Next.Data);
-        }
-        [Fact]
-        public void Append_InputTestClass_FirstNodeNextIsSecondNode()
-        {
-            //Arrange
-            TestClass secondNodeData = new("AmI?WhatIsThis...Life?", 1222);
-            Node<TestClass> node = new(new TestClass("IamADifferent(nonSentient)TestClass", 1233));
+        //Assert
+        Assert.False(isInLinkedL);
+    }
+    [Fact]
+    public void ArrangeExists_DuplicateAppended_ThrowsException()
+    {
+        //Arrange
+        int nodeData = 0;
+        Node<int> head = new(nodeData);
 
-            //Act
-            node.Append(secondNodeData);
+        //Act
+        head.Append(1);
+        head.Next.Append(2);
 
-            //Assert
-            Assert.Equal<TestClass>(secondNodeData, node.Next.Data);
-        }
-        [Fact]
-        public void Append_InputInt_LastNodeCirclesToFront()
-        {
-            //Arrange
-            int nodeOneData = 0;
-            Node<int> node = new(nodeOneData);
+        //Assert
+        Assert.Throws<InvalidOperationException>(() => head.Next.Next.Append(nodeData));
+    }
+    [Fact]
+    public void Clear_ClearIsSetsNextToSelf_OtherNodesCanAccessClearedNode()
+    {
+        //Arrange
+        Node<int> head = new(0);
+        head.Append(1);
+        head.Next.Append(2);
 
-            //Act
-            node.Append(1);
+        Node<int> second = head.Next;
+        Node<int> third = second.Next;
 
-            //Assert
-            Assert.Equal<int>(0, node.Next.Next.Data);
-        }
-        [Fact]
-        public void Append_InputTestClass_LastNodeCirclesToFront()
-        {
-            //Arrange
-            TestClass firstNodeData = new("AlrightGuysThisIsGettingWeird", 1222);
-            Node<TestClass> node = new(firstNodeData);
+        //Act
+        head.Clear();
 
-            //Act
-            node.Append(new TestClass("IamADifferent(nonSentient)TestClass", 1233));
+        //Assert
+        Assert.Same(head, head.Next); //Head now points to itself
 
-            //Assert
-            Assert.Equal<TestClass>(firstNodeData, node.Next.Next.Data);
-        }
-        [Fact]
-        public void Append_AppendingMultiple_EachNodesNextIsCorrect()
-        {
-            //Arrange
-            //These Are not directly Used but they are here to demonstrate
-            //The data added in the for loop
-            int nodeOneData = 0;
-            int oneNextData = 1;
-            int twoNextData = 2;
-            int threeNextData = 3;
-            int fourNextData = nodeOneData;
-            Node<int> node = new(nodeOneData);
+        Assert.Same(third, second.Next);
+        Assert.NotSame(second, third.Next); //This Means the cleared pieces dont make their own loop
+        Assert.Same(head, third.Next); //This Shows that third.Next is still accessing head (which is a problem)
 
-            //Act
-            Node<int> cur = node;
-            for (int i = 1; i < 4; i++)
-            {
-                cur.Append(i);
-                cur = cur.Next;
-            }
-            Node<int> node2 = node.Next;
-            Node<int> node3 = node2.Next;
-            Node<int> node4 = node3.Next;
+        //An itterative clear is necessary to prevent head from getting accessed by nodes it
+        //no longer connected to
+    }
+    [Fact]
+    public void IterativeClear_ClearSetsAllNodesNextToSelf_NoNodesCanAccessClearedNode()
+    {
+        //Arrange
+        Node<int> head = new(0);
+        head.Append(1);
+        head.Next.Append(2);
 
-            //Assert
-            Assert.Equal<int>(oneNextData, node.Next.Data);
-            Assert.Equal<int>(twoNextData, node2.Next.Data);
-            Assert.Equal<int>(threeNextData, node3.Next.Data);
-            Assert.Equal<int>(fourNextData, node4.Next.Data);
-        }
-        [Fact]
-        public void Exists_WithObjectInLL_ReturnsTrue()
-        {
-            //Arrange
-            TestClass testClassToFind = new("ItIsSuchAStrangeThingToBeAnythingAtAll", 1);
-            Node<TestClass> head = new(new TestClass("IamADifferentClass", 2));
-            head.Append(new TestClass("AnotherDifferentClass", 3));
-            head.Next.Append(testClassToFind);
-            head.Next.Next.Append(new TestClass("YetAnotherDifferentClass", 4));
+        Node<int> second = head.Next;
+        Node<int> third = second.Next;
 
-            //Act
-            bool isInLinkedL = head.Exists(testClassToFind);
+        //Act
+        head.IterativeClear();
 
-            //Assert
-            Assert.True(isInLinkedL);
-        }
-        [Fact]
-        public void Exists_WithoutObjectInLL_ReturnsFalse()
-        {
-            //Arrange
-            TestClass testClassToFind = new("IDontKnowWhatIsHappeningAnymore...MaybeATestClassShouldNotHaveSentience", 1);
-            Node<TestClass> head = new(new TestClass("IamADifferentClass", 2));
-            head.Append(new TestClass("AnotherDifferentClass", 3));
-            head.Next.Append(new TestClass("Ronald", 4));
-            head.Next.Next.Append(new TestClass("YetAnotherDifferentClass", 5));
-            //Act
-            bool isInLinkedL = head.Exists(testClassToFind);
+        //Assert
+        Assert.Same(head, head.Next);
+        Assert.Same(second, second.Next);
+        Assert.Same(third, third.Next);
+    }
+    [Fact]
+    public void ToString_TwoStringOnTestClass_ConvertsToStringCorrectly()
+    {
+        //Arrange
+        TestClass testClass = new TestClass("Gumbus", 1);
+        string testClassToString = testClass.ToString();
+        Node<TestClass> head = new(testClass);
 
-            //Assert
-            Assert.False(isInLinkedL);
-        }
-        [Fact]
-        public void ArrangeExists_DuplicateAppended_ThrowsException()
-        {
-            //Arrange
-            int nodeData = 0;
-            Node<int> head = new(nodeData);
+        //Act
+        String toStringReturned = head.ToString();
 
-            //Act
-            head.Append(1);
-            head.Next.Append(2);
-
-            //Assert
-            Assert.Throws<InvalidOperationException>(() => head.Next.Next.Append(nodeData));
-        }
-        [Fact]
-        public void Clear_ClearIsSetsNextToSelf_OtherNodesCanAccessClearedNode()
-        {
-            //Arrange
-            Node<int> head = new(0);
-            head.Append(1);
-            head.Next.Append(2);
-
-            Node<int> second = head.Next;
-            Node<int> third = second.Next;
-
-            //Act
-            head.Clear();
-
-            //Assert
-            Assert.Same(head, head.Next); //Head now points to itself
-
-            Assert.Same(third, second.Next);
-            Assert.NotSame(second, third.Next); //This Means the cleared pieces dont make their own loop
-            Assert.Same(head, third.Next); //This Shows that third.Next is still accessing head (which is a problem)
-
-            //An itterative clear is necessary to prevent head from getting accessed by nodes it
-            //no longer connected to
-        }
-        [Fact]
-        public void IterativeClear_ClearSetsAllNodesNextToSelf_NoNodesCanAccessClearedNode()
-        {
-            //Arrange
-            Node<int> head = new(0);
-            head.Append(1);
-            head.Next.Append(2);
-
-            Node<int> second = head.Next;
-            Node<int> third = second.Next;
-
-            //Act
-            head.IterativeClear();
-
-            //Assert
-            Assert.Same(head, head.Next);
-            Assert.Same(second, second.Next);
-            Assert.Same(third, third.Next);
-        }
-        [Fact]
-        public void ToString_TwoStringOnTestClass_ConvertsToStringCorrectly()
-        {
-            //Arrange
-            TestClass testClass = new TestClass("Gumbus", 1);
-            string testClassToString = testClass.ToString();
-            Node<TestClass> head = new(testClass);
-
-            //Act
-            String toStringReturned = head.ToString();
-
-            //Assert
-            Assert.Equal(toStringReturned, testClassToString);
-        }
+        //Assert
+        Assert.Equal(toStringReturned, testClassToString);
     }
 }

@@ -1,73 +1,72 @@
-﻿namespace GenericsHomework
+﻿namespace GenericsHomework;
+
+public class Node<T>
 {
-    public class Node<T>
+    public T Data { get; set; }
+    private Node<T> _next;
+    public Node<T> Next
     {
-        public T Data { get; set; }
-        private Node<T> _next;
-        public Node<T> Next
-        {
-            get => _next;
-            private set => _next = value ?? this;
-        }
+        get => _next;
+        private set => _next = value ?? this;
+    }
 
-        public Node(T data)
-        {
-            Data = data;
-            _next = this;
-        }
+    public Node(T data)
+    {
+        Data = data;
+        _next = this;
+    }
 
-        public void Append(T value)
+    public void Append(T value)
+    {
+        if (this.Exists(value))
         {
-            if (this.Exists(value))
-            {
-                throw new InvalidOperationException("Cannot Have Duplicates Appended");
-            }
-            Node<T> nextNode = new(value)
-            {
-                Next = this.Next
-            };
-            Next = nextNode;
+            throw new InvalidOperationException("Cannot Have Duplicates Appended");
         }
+        Node<T> nextNode = new(value)
+        {
+            Next = this.Next
+        };
+        Next = nextNode;
+    }
 
-        public void Clear()
+    public void Clear()
+    {
+        Next = this;
+    }
+    public void IterativeClear()
+    {
+        Node<T> cur = this.Next;
+        while (cur != this)
         {
-            Next = this;
+            Node<T> next = cur.Next;
+            cur.Next = cur;
+            cur = next;
         }
-        public void IterativeClear()
-        {
-            Node<T> cur = this.Next;
-            while (cur != this)
-            {
-                Node<T> next = cur.Next;
-                cur.Next = cur;
-                cur = next;
-            }
-            this.Next = this;
-        }
+        this.Next = this;
+    }
 
-        public bool Exists(T value)
+    public bool Exists(T value)
+    {
+        Node<T> cur = this;
+        do
         {
-            Node<T> cur = this;
-            do
+            if (Equals(cur.Data, value))
             {
-                if (Equals(cur.Data, value))
-                {
-                    return true;
-                }
-                cur = cur.Next;
-            } while (cur.Next != this);
-            return false;
+                return true;
+            }
+            cur = cur.Next;
+        } while (cur.Next != this);
+        return false;
+    }
+    public override string ToString()
+    {
+        if (Data is null)
+        {
+            return "null";
         }
-        public override string ToString()
+        else
         {
-            if (Data is null)
-            {
-                return "null";
-            }
-            else
-            {
-                return Data.ToString() ?? "null";
-            }
+            return Data.ToString() ?? "null";
         }
     }
 }
