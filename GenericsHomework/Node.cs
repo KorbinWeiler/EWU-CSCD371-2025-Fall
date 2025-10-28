@@ -3,17 +3,17 @@
 public class Node<T>
 {
     public T Data { get; set; }
-    private Node<T> _next;
+    private Node<T> next;
     public Node<T> Next
     {
-        get => _next;
-        private set => _next = value ?? this;
+        get => next;
+        private set => next = value ?? this;
     }
 
     public Node(T data)
     {
         Data = data;
-        _next = this;
+        next = this;
     }
 
     public void Append(T value)
