@@ -9,7 +9,7 @@ public class UnitTest1
     public record class TestClass(string Name, int Id);
 
     [Fact]
-    public void Name_SingleNodeLinkedList_NextIsSetToSelf()
+    public void NameSingleNodeLinkedListNextIsSetToSelf()
     {
         //Arrange
         int input = 0;
@@ -22,7 +22,7 @@ public class UnitTest1
         Assert.Equal<Node<int>>(node, next);
     }
     [Fact]
-    public void Node_InputIsTestClass_NodeIsAbleToStoreData()
+    public void NodeInputIsTestClassNodeIsAbleToStoreData()
     {
         //Arrange
         TestClass testClass = new("GaryTheSentientTestClass", 1234);
@@ -34,7 +34,7 @@ public class UnitTest1
         Assert.Equal<TestClass>(testClass, node.Data);
     }
     [Fact]
-    public void Append_InputInt_FirstNodeNextIsSecondNode ()
+    public void AppendInputIntFirstNodeNextIsSecondNode ()
     {
         //Arrange
         int nodeTwoData = 1;
@@ -47,7 +47,7 @@ public class UnitTest1
         Assert.Equal<int>(1, node.Next.Data);
     }
     [Fact]
-    public void Append_InputTestClass_FirstNodeNextIsSecondNode()
+    public void AppendInputTestClassFirstNodeNextIsSecondNode()
     {
         //Arrange
         TestClass secondNodeData = new("AmI?WhatIsThis...Life?", 1222);
@@ -60,7 +60,7 @@ public class UnitTest1
         Assert.Equal<TestClass>(secondNodeData, node.Next.Data);
     }
     [Fact]
-    public void Append_InputInt_LastNodeCirclesToFront()
+    public void AppendInputIntLastNodeCirclesToFront()
     {
         //Arrange
         int nodeOneData = 0;
@@ -73,7 +73,7 @@ public class UnitTest1
         Assert.Equal<int>(0, node.Next.Next.Data);
     }
     [Fact]
-    public void Append_InputTestClass_LastNodeCirclesToFront()
+    public void AppendInputTestClassLastNodeCirclesToFront()
     {
         //Arrange
         TestClass firstNodeData = new("AlrightGuysThisIsGettingWeird", 1222);
@@ -86,7 +86,7 @@ public class UnitTest1
         Assert.Equal<TestClass>(firstNodeData, node.Next.Next.Data);
     }
     [Fact]
-    public void Append_AppendingMultiple_EachNodesNextIsCorrect()
+    public void AppendAppendingMultipleEachNodesNextIsCorrect()
     {
         //Arrange
         //These Are not directly Used but they are here to demonstrate
@@ -116,7 +116,7 @@ public class UnitTest1
         Assert.Equal<int>(fourNextData, node4.Next.Data);
     }
     [Fact]
-    public void Exists_WithObjectInLL_ReturnsTrue()
+    public void ExistsWithObjectInLLReturnsTrue()
     {
         //Arrange
         TestClass testClassToFind = new("ItIsSuchAStrangeThingToBeAnythingAtAll", 1);
@@ -132,7 +132,7 @@ public class UnitTest1
         Assert.True(isInLinkedL);
     }
     [Fact]
-    public void Exists_WithoutObjectInLL_ReturnsFalse()
+    public void ExistsWithoutObjectInLLReturnsFalse()
     {
         //Arrange
         TestClass testClassToFind = new("IDontKnowWhatIsHappeningAnymore...MaybeATestClassShouldNotHaveSentience", 1);
@@ -147,7 +147,7 @@ public class UnitTest1
         Assert.False(isInLinkedL);
     }
     [Fact]
-    public void ArrangeExists_DuplicateAppended_ThrowsException()
+    public void ArrangeExistsDuplicateAppendedThrowsException()
     {
         //Arrange
         int nodeData = 0;
@@ -161,7 +161,7 @@ public class UnitTest1
         Assert.Throws<InvalidOperationException>(() => head.Next.Next.Append(nodeData));
     }
     [Fact]
-    public void Clear_ClearIsSetsNextToSelf_OtherNodesCanAccessClearedNode()
+    public void ClearClearIsSetsNextToSelfOtherNodesCanAccessClearedNode()
     {
         //Arrange
         Node<int> head = new(0);
@@ -185,7 +185,7 @@ public class UnitTest1
         //no longer connected to
     }
     [Fact]
-    public void IterativeClear_ClearSetsAllNodesNextToSelf_NoNodesCanAccessClearedNode()
+    public void IterativeClearClearSetsAllNodesNextToSelfNoNodesCanAccessClearedNode()
     {
         //Arrange
         Node<int> head = new(0);
@@ -204,7 +204,7 @@ public class UnitTest1
         Assert.Same(third, third.Next);
     }
     [Fact]
-    public void ToString_TwoStringOnTestClass_ConvertsToStringCorrectly()
+    public void ToStringTwoStringOnTestClassConvertsToStringCorrectly()
     {
         //Arrange
         TestClass testClass = new TestClass("Gumbus", 1);
