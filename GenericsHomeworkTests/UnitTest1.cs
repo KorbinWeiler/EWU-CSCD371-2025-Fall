@@ -203,6 +203,19 @@ namespace GenericsHomeworkTests
             Assert.Same(second, second.Next);
             Assert.Same(third, third.Next);
         }
+        [Fact]
+        public void ToString_TwoStringOnTestClass_ConvertsToStringCorrectly()
+        {
+            //Arrange
+            TestClass testClass = new TestClass("Gumbus", 1);
+            string testClassToString = testClass.ToString();
+            Node<TestClass> head = new(testClass);
 
+            //Act
+            String toStringReturned = head.ToString();
+
+            //Assert
+            Assert.Equal(toStringReturned, testClassToString);
+        }
     }
 }
