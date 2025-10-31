@@ -1,17 +1,16 @@
-namespace GenericsHomework
+namespace GenericsHomework;
+
+public class Circle<T>
 {
-    public class Circle<T>
+    readonly private List<T> _elements;
+
+    public Circle()
     {
-        private List<T> _elements;
+        _elements = new List<T>();
+    }
 
-        public Circle()
-        {
-            _elements = new List<T>();
-        }
-
-        public void Add(T newValue)
-        {
-            _elements.Add(newValue);
-        }
+    public void Add(T newValue)
+    {
+        _elements.Add(newValue);
     }
 }
