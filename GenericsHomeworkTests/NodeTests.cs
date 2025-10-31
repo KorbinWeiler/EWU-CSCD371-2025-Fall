@@ -4,7 +4,7 @@ using Xunit;
 
 namespace GenericsHomeworkTests;
 
-public class UnitTest1
+public class NodeTests
 {
     public record class TestClass(string Name, int Id);
 
