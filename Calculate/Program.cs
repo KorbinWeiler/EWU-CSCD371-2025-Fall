@@ -4,18 +4,18 @@ using Microsoft.VisualBasic;
 
 namespace Calculate;
 
-public class ProgramBase
+public class Program
 {
     public Func<string?> ReadLine { get; init; }
-    public Func<bool> WriteLine { get; init; }
+    public Action<string> WriteLine { get; init; }
 
-    public ProgramBase()
+    public Program()
     {
         ReadLine = () => { return Console.ReadLine(); };
-        WriteLine = () => { Console.WriteLine(); return true; };
+        WriteLine = (value) => { Console.WriteLine(value);};
     }
 
-    public ProgramBase(Func<string> readLine, Func<bool> writeLine)
+    public Program(Func<string> readLine, Action<string> writeLine)
     {
         ReadLine = readLine;
         WriteLine = writeLine;

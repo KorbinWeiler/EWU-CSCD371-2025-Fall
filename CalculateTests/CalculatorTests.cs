@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace CalculateTests;
+namespace Calculate;
 
 public class CalculatorTests
 {
