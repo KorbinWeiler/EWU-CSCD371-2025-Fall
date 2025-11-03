@@ -4,20 +4,25 @@ using Microsoft.VisualBasic;
 
 namespace Calculate;
 
-public class Program
+public class ProgramBase
 {
-    private Func<string> ReadLine { get; set; }
-    private Func<bool> WriteLine { get; set; }
+    public Func<string?> ReadLine { get; init; }
+    public Func<bool> WriteLine { get; init; }
 
-    public Program()
+    public ProgramBase()
     {
         ReadLine = () => { return Console.ReadLine(); };
         WriteLine = () => { Console.WriteLine(); return true; };
     }
 
-    public Program(Func<string> readLine, Func<bool> writeLine)
+    public ProgramBase(Func<string> readLine, Func<bool> writeLine)
     {
         ReadLine = readLine;
         WriteLine = writeLine;
+    }
+
+    static void Main()
+    {
+        
     }
 }
