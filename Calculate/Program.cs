@@ -6,13 +6,11 @@ namespace Calculate;
 
 public class Program
 {
-    public Func<string?> ReadLine { get; init; }
-    public Action<string> WriteLine { get; init; }
+    public Func<string?> ReadLine { get; init; } = () => { return Console.ReadLine(); };
+    public Action<string> WriteLine { get; init; } = (value) => { Console.WriteLine(value); };
 
     public Program()
     {
-        ReadLine = () => { return Console.ReadLine(); };
-        WriteLine = (value) => { Console.WriteLine(value);};
     }
 
     public Program(Func<string> readLine, Action<string> writeLine)
