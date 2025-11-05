@@ -4,6 +4,8 @@ namespace Calculate;
 
 public class ProgramTests
 {
+    // Here because checks were failing due to xUnit2006 warning
+    #pragma warning disable xUnit2006
     [Fact]
     public void ReadLine_NonDefaultValueSet_ReturnsExpectedValue()
     {
@@ -34,4 +36,5 @@ public class ProgramTests
 
         Assert.Equal<string>("Test Value", capturedValue);
     }
+    #pragma warning restore xUnit2006
 }
