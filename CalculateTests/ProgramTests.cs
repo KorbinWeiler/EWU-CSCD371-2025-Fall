@@ -8,7 +8,7 @@ public class ProgramTests
     public void ReadLine_NonDefaultValueSet_ReturnsExpectedValue()
     {
         Program program = new Program(() => { return "Test Value"; }, (value) => { });
-        Assert.Equal("Test Value", program.ReadLine());
+        Assert.Equal<string>("Test Value", program.ReadLine());
     }
 
     [Fact]
@@ -21,7 +21,7 @@ public class ProgramTests
         Console.SetOut(consoleOutput);
         program.WriteLine("Test");
         Console.SetOut(originalOutput);
-        Assert.Equal("Test" + Environment.NewLine, consoleOutput.ToString());
+        Assert.Equal<string>("Test" + Environment.NewLine, consoleOutput.ToString());
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class ProgramTests
         Program program = new Program(() => { return ""; }, (value) => { capturedValue = value; });
 
         program.WriteLine("Test Value");
-        
-        Assert.Equal("Test Value", capturedValue);
+
+        Assert.Equal<string>("Test Value", capturedValue);
     }
 }

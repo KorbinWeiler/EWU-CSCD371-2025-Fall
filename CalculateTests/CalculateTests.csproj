@@ -11,6 +11,10 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NoWarn>xUnit2006</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Calculate\Calculate.csproj" />
   </ItemGroup>
