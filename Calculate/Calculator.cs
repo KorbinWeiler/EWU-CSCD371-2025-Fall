@@ -18,22 +18,22 @@ public class Calculator
             {'/', Divide },
         };
     }
-    static double Add(int a, int b)
+    public static double Add(int a, int b)
     {
-        return a + b;
+        return checked(a + b);
     }
 
-    static double Subtract(int a, int b)
+    public static double Subtract(int a, int b)
     {
-        return a - b;
+        return checked(a - b);
     }
 
-    static double Multiply(int a, int b)
+    public static double Multiply(int a, int b)
     {
-        return a * b;
+        return checked(a * b);
     }
 
-    static double Divide(int a, int b)
+    public static double Divide(int a, int b)
     {
         if (b == 0)
         {
