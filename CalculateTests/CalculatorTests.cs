@@ -165,6 +165,15 @@ public class CalculatorTests
         // Assert
         Assert.Equal<double>(expected, result);
     }
+    [Fact]
+    public void Divide_DividingByZero_ThrowsDivideByZeroException()
+    {
+        // Arrange
+        int numerator = 2;
+        int denominator = 0;
+        // Act & Assert
+        Assert.Throws<DivideByZeroException>(() => Calculator.Divide(numerator, denominator));
+    }
 }
 
 
