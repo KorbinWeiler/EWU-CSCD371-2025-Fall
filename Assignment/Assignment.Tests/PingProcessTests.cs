@@ -1,8 +1,10 @@
 ﻿using IntelliTect.TestTools;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assignment.Tests;
@@ -59,14 +61,14 @@ public class PingProcessTests
     {
         // Do NOT use async/await in this test.
         // Test Sut.RunTaskAsync("localhost");
-        AssertValidPingOutput(Sut.RunTaskAsync("localhost").Result);
+        PingResult result = Sut.RunTaskAsync("localhost").Result;
+        AssertValidPingOutput(result);
     }
 
     [TestMethod]
     public void RunAsync_UsingTaskReturn_Success()
     {
         Task<PingResult> task = Sut.RunAsync("localhost");
-        //task.Wait();
         PingResult result = task.Result;
         AssertValidPingOutput(result);
     }
@@ -75,27 +77,68 @@ public class PingProcessTests
 #pragma warning disable CS1998 // Remove this
     async public Task RunAsync_UsingTpl_Success()
     {
-        // DO use async/await in this test.
-        PingResult result = default;
 
-        // Test Sut.RunAsync("localhost");
-        AssertValidPingOutput(result);
+        Task<PingResult> task = Sut.RunAsync("localhost");
+        Task continuation = task.ContinueWith(t =>
+        {
+            // rethrow any exception from the task and get the result
+            PingResult result = t.Result;
+            AssertValidPingOutput(result);
+        });
+        continuation.Wait();
     }
 #pragma warning restore CS1998 // Remove this
 
 
-    // [TestMethod]
-    // [ExpectedException(typeof(AggregateException))]
-    // public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
-    // {
-    // }
+    [TestMethod]
+    //[ExpectedException(typeof(AggregateException))]
+    public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
+    {
+        CancellationTokenSource cts = new();
+        cts.Cancel();
+        Task<PingResult> task = Sut.RunAsync("localhost", cts.Token);
+        Task continuation = task.ContinueWith(t =>
+        {
+            cts.Cancel();
+            PingResult result = t.Result;
+        });
 
-    // [TestMethod]
+        try
+        {
+            continuation.Wait();
+            Assert.Fail("Expected exception not thrown.");
+        }
+        catch (AggregateException ex)
+        {
+            Assert.IsInstanceOfType(ex.InnerException, typeof(AggregateException));
+        }
+        
+    }
+
+    [TestMethod]
     // [ExpectedException(typeof(TaskCanceledException))]
-    // public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
-    // {
-    //     // Use exception.Flatten()
-    // }
+    public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
+    {
+        CancellationTokenSource cts = new();
+        cts.Cancel();
+        Task<PingResult> task = Sut.RunAsync("localhost", cts.Token);
+        Task continuation = task.ContinueWith(t =>
+        {
+            cts.Cancel();
+            PingResult result = t.Result;
+        });
+
+        try
+        {
+            continuation.Wait();
+            Assert.Fail("Expected exception not thrown.");
+        }
+        catch (AggregateException ex)
+        {
+            var exceptions = ex.Flatten().InnerExceptions;
+            Assert.IsInstanceOfType(exceptions[0], typeof(TaskCanceledException));
+        }
+    }
 
     [TestMethod]
     async public Task RunAsync_MultipleHostAddresses_True()

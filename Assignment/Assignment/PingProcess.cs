@@ -34,15 +34,16 @@ public class PingProcess
         string hostNameOrAddress, CancellationToken cancellationToken = default)
     {
         // Run the synchronous Run(...) on the thread-pool and respect cancellation.
+        cancellationToken.ThrowIfCancellationRequested();
         return await Task.Run(() => Run(hostNameOrAddress), cancellationToken);
     }
 
-    async public Task<PingResult> RunAsync(params string[] hostNameOrAddresses)
+    async public Task<PingResult> RunAsync(string[] hostNameOrAddresses, CancellationToken cancellationToken = default)
     {
         StringBuilder? stringBuilder = null;
         ParallelQuery<Task<int>>? all = hostNameOrAddresses.AsParallel().Select(async item =>
         {
-            Task<PingResult> task = Task.Run(() => Run(item));
+            Task<PingResult> task = RunAsync(item, cancellationToken);
             // ...
 
             await task.WaitAsync(default(CancellationToken));
