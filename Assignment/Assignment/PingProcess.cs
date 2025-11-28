@@ -27,15 +27,14 @@ public class PingProcess
 
     public Task<PingResult> RunTaskAsync(string hostNameOrAddress)
     {
-        throw new NotImplementedException();
+        return Task.Run(() => Run(hostNameOrAddress));
     }
 
     async public Task<PingResult> RunAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default)
     {
-        Task task = null!;
-        await task;
-        throw new NotImplementedException();
+        // Run the synchronous Run(...) on the thread-pool and respect cancellation.
+        return await Task.Run(() => Run(hostNameOrAddress), cancellationToken);
     }
 
     async public Task<PingResult> RunAsync(params string[] hostNameOrAddresses)
@@ -43,7 +42,7 @@ public class PingProcess
         StringBuilder? stringBuilder = null;
         ParallelQuery<Task<int>>? all = hostNameOrAddresses.AsParallel().Select(async item =>
         {
-            Task<PingResult> task = null!;
+            Task<PingResult> task = Task.Run(() => Run(item));
             // ...
 
             await task.WaitAsync(default(CancellationToken));
@@ -59,8 +58,14 @@ public class PingProcess
         string hostNameOrAddress, CancellationToken cancellationToken = default)
     {
         Task task = null!;
-        await task;
-        throw new NotImplementedException();
+        await Task.Run(() =>
+        {
+            task = Task.Factory.StartNew(() => Run(hostNameOrAddress),
+                cancellationToken,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+        }, cancellationToken);
+        return await (Task<PingResult>)task;
     }
 
     private Process RunProcessInternal(
